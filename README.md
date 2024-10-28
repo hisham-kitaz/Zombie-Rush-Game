@@ -1,6 +1,7 @@
 # Zombie-Rush-Game
 #  Project Overview
 
+# please note that the game has been optimized and designed to run on the OnePlus 12R. The assets, including tile design, colors, and UI elements, are tailored to look and perform best on this device, ensuring a high-quality visual experience.
 
 This project is a game inspired by Candy Crush Saga, designed as part of the COMP 376 Fall 2024 Assignment 2. The game consists of two levels, each with unique mechanics related to tile matching and cascading effects. The goal is to clear the board by matching colored tiles in rows or columns of three or more. Points are awarded based on matches, and additional points can be earned through cascading chain reactions.
 
