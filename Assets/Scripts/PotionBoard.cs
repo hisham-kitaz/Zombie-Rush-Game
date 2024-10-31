@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PotionBoard : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] matchSounds = new AudioClip[3]; // Array of 3 match sounds
+    private int currentMatchSoundIndex = 0; // Track which sound to play next
     //define the size of the board
     public int width = 8;
     public int height = 8;
@@ -44,11 +48,34 @@ public class PotionBoard : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Start()
     {
         InitializeBoard();
+    }
+
+    private void PlayNextMatchSound()
+    {
+        if (audioSource != null && matchSounds != null && matchSounds.Length > 0)
+        {
+            // Check if we have a valid sound at the current index
+            if (matchSounds[currentMatchSoundIndex] != null)
+            {
+                audioSource.PlayOneShot(matchSounds[currentMatchSoundIndex]);
+
+                // Move to next sound index, wrap around to 0 if we reach the end
+                currentMatchSoundIndex = (currentMatchSoundIndex + 1) % matchSounds.Length;
+            }
+            else
+            {
+                Debug.LogWarning($"Match sound at index {currentMatchSoundIndex} is null!");
+            }
+        }
     }
 
     private void Update()
@@ -286,6 +313,7 @@ public class PotionBoard : MonoBehaviour
 
         if (CheckBoard())
         {
+            PlayNextMatchSound(); // Replace the old audio play with our new method
             StartCoroutine(ProcessTurnOnMatchedBoard(false));
         }
     }
@@ -762,6 +790,7 @@ public class PotionBoard : MonoBehaviour
 
         if (CheckBoard())
         {
+            PlayNextMatchSound();
             StartCoroutine(ProcessTurnOnMatchedBoard(true));
         }
         else

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PotionBoard2 : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource2;
+    [SerializeField] private AudioClip[] matchSounds2 = new AudioClip[3]; // Array of 3 match sounds
+    private int currentMatchSoundIndex2 = 0; // Track which sound to play next
     //define the size of the board
     public int width = 8;
     public int height = 8;
@@ -42,13 +46,34 @@ public class PotionBoard2 : MonoBehaviour
     private void Awake()
     {
         Instance2 = this;
+        if (audioSource2 == null)
+        {
+            audioSource2 = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Start()
     {
         InitializeBoard2(); // Renamed
     }
+    private void PlayNextMatchSound2()
+    {
+        if (audioSource2 != null && matchSounds2 != null && matchSounds2.Length > 0)
+        {
+            // Check if we have a valid sound at the current index
+            if (matchSounds2[currentMatchSoundIndex2] != null)
+            {
+                audioSource2.PlayOneShot(matchSounds2[currentMatchSoundIndex2]);
 
+                // Move to next sound index, wrap around to 0 if we reach the end
+                currentMatchSoundIndex2 = (currentMatchSoundIndex2 + 1) % matchSounds2.Length;
+            }
+            else
+            {
+                Debug.LogWarning($"Match sound 2 at index {currentMatchSoundIndex2} is null!");
+            }
+        }
+    }
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -242,6 +267,7 @@ public class PotionBoard2 : MonoBehaviour
 
         if (CheckBoard2()) // Renamed
         {
+            PlayNextMatchSound2();
             StartCoroutine(ProcessTurnOnMatchedBoard2(false)); // Renamed
         }
     }
@@ -649,6 +675,7 @@ public class PotionBoard2 : MonoBehaviour
 
         if (CheckBoard2()) // Renamed
         {
+            PlayNextMatchSound2();
             StartCoroutine(ProcessTurnOnMatchedBoard2(true)); // Renamed
         }
         else
